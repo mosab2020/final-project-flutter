@@ -270,13 +270,13 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          // MyButton(lable: "+ Add Task", onTap: () => Get.to(AddTaskPage()))
-          ElevatedButton(
-              onPressed: () async {
-                await Get.to(AddTaskPage());
-                _taskController.getTasks();
-              },
-              child: Text("+ Add Task"))
+          MyButton(lable: "+ Add Task", onTap: () => Get.to(AddTaskPage()))
+          // ElevatedButton(
+          //     onPressed: () async {
+          //       await Get.to(AddTaskPage());
+          //       _taskController.getTasks();
+          //     },
+          //     child: Text("+ Add Task"))
         ],
       ),
     );
