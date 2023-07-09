@@ -1,12 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_app/controllers/task_controller.dart';
 import 'package:to_do_app/models/task.dart';
 import 'package:to_do_app/ui/theme.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:to_do_app/ui/widgets/button.dart';
 import 'package:to_do_app/ui/widgets/input_field.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -49,12 +47,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 title: "Date",
                 hint: DateFormat.yMd().format(_selectedDate),
                 widget: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.calendar_today_outlined,
                     color: Colors.grey,
                   ),
                   onPressed: () {
-                    print("Hi There");
+                    if (kDebugMode) {
+                      print("Hi There");
+                    }
                     _getDateFromUser();
                   },
                 ),
@@ -63,19 +63,19 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 children: [
                   Expanded(
                       child: MyInputField(
-                    title: "Starte Time",
+                    title: "Start Time",
                     hint: _startTime,
                     widget: IconButton(
                       onPressed: () {
                         _getTimeFromUser(isStartTime: true);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.access_time_rounded,
                         color: Colors.grey,
                       ),
                     ),
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
                   Expanded(
@@ -86,7 +86,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       onPressed: () {
                         _getTimeFromUser(isStartTime: false);
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.access_time_rounded,
                         color: Colors.grey,
                       ),
@@ -98,7 +98,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 title: "Remind",
                 hint: "$_selectedRemind minutes early",
                 widget: DropdownButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.keyboard_arrow_down,
                     color: Colors.grey,
                   ),
@@ -123,9 +123,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               MyInputField(
                 title: "Repeat",
-                hint: "$_selectedRepeat",
+                hint: _selectedRepeat,
                 widget: DropdownButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.keyboard_arrow_down,
                     color: Colors.grey,
                   ),
@@ -145,14 +145,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
-                        value!,
-                        style: TextStyle(color: Colors.grey),
+                        value,
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     );
                   }).toList(),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
               Row(
@@ -160,8 +160,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _colorPallete(),
-                  // MyButton(lable: "Create Task", onTap: () => _validateData(),)
-                  ElevatedButton(onPressed: () => _validateData(), child: Text("Create Task"))
+                  // MyButton(liable: "Create Task", onTap: () => _validateData(),)
+                  ElevatedButton(onPressed: () => _validateData(), child: const Text("Create Task"))
                 ],
               ),
             ],
@@ -185,7 +185,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           color: Get.isDarkMode ? Colors.white : Colors.black,
         ),
       ),
-      actions: [
+      actions: const [
         CircleAvatar(
           backgroundImage: AssetImage("images/Icon-512.png"),
         ),
@@ -197,34 +197,40 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _getDateFromUser() async {
-    DateTime? _pickerDate = await showDatePicker(
+    DateTime? pickerDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(1000),
         lastDate: DateTime(3000));
 
-    if (_pickerDate != null) {
+    if (pickerDate != null) {
       setState(() {
-        _selectedDate = _pickerDate;
-        print(_selectedDate);
+        _selectedDate = pickerDate;
+        if (kDebugMode) {
+          print(_selectedDate);
+        }
       });
     } else {
-      print("It's null or something is wrong!!");
+      if (kDebugMode) {
+        print("It's null or something is wrong!!");
+      }
     }
   }
 
-  _getTimeFromUser({required bool isStartTime}) async {
-    var pickedTime = await _showTimePicker();
-    String _formattedTime = pickedTime.format(context);
+  _getTimeFromUser({required bool isStartTime})  {
+    var pickedTime =  _showTimePicker();
+    String formattedTime = pickedTime.format(context);
     if (pickedTime == null) {
-      print("Time Canceled!");
+      if (kDebugMode) {
+        print("Time Canceled!");
+      }
     } else if (isStartTime == true) {
       setState(() {
-        _startTime = _formattedTime;
+        _startTime = formattedTime;
       });
     } else if (isStartTime == false) {
       setState(() {
-        _endTime = _formattedTime;
+        _endTime = formattedTime;
       });
     }
   }
@@ -247,7 +253,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           "Color",
           style: titleStyle,
         ),
-        SizedBox(
+        const SizedBox(
           height: 8.0,
         ),
         Wrap(
@@ -256,7 +262,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
               onTap: () {
                 setState(() {
                   _selectedColor = index;
-                  print("$index");
+                  if (kDebugMode) {
+                    print("$index");
+                  }
                 });
               },
               child: Padding(
@@ -269,7 +277,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           ? pinkColor
                           : yellowColor,
                   child: _selectedColor == index
-                      ? Icon(
+                      ? const Icon(
                           Icons.done,
                           color: Colors.white,
                           size: 16,
@@ -293,7 +301,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.white,
           colorText: pinkColor,
-          icon: Icon(Icons.warning_amber_rounded,color: Colors.red,));
+          icon: const Icon(Icons.warning_amber_rounded,color: Colors.red,));
     }
   }
 
@@ -311,6 +319,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
             isCompleted: 0
         )
     );
-    print("My id is $value");
+    if (kDebugMode) {
+      print("My id is $value");
+    }
   }
 }
